@@ -1,0 +1,17 @@
+@import "../../styles/variables.scss";
+
+.avatar {
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.iconEmailVerified {
+  font-size: 1.5rem;
+  color: $email-verified-icon-colour;
+}
+
+.iconEmailNotVerified {
+  font-size: 1.5rem;
+  color: $email-not-verified-icon-colour;
+}

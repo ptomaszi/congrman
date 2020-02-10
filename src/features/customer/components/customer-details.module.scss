@@ -1,0 +1,33 @@
+@import "../../../styles/variables.scss";
+@import "../../../styles/placeholders.scss";
+
+.card {
+  @extend %card;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  > .iconContainer {
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    margin-right: 50px;
+
+    > .icon {
+      font-size: 100px;
+      color: $login-icon-colour;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  button {
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+@import "../../../../styles/placeholders.scss";
+
+.card {
+  @extend %card;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 100%));
+  column-gap: 25px;
+  row-gap: 25px;
+}
+
+.addCustomerButton {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
