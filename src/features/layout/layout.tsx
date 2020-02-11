@@ -1,24 +1,25 @@
 import React, { useState } from "react";
 import { Layout as AntLayout, Menu, Avatar, PageHeader, Drawer } from "antd";
 import styles from "./layout.module.scss";
-import { PieChartFilled, DesktopOutlined, InboxOutlined, LogoutOutlined, HomeOutlined } from "@ant-design/icons";
-import { useAuthDataContext } from "../../core/auth/auth-embedded-provider";
-import { Link, Route } from "react-router-dom";
-import { CustomersList } from "../customer/components/customers-list";
+import { PieChartFilled, InboxOutlined, LogoutOutlined, HomeOutlined } from "@ant-design/icons";
+import { useAuthDataContext } from "../../core/auth/auth-provider";
+import { Link, Route, useHistory } from "react-router-dom";
+import { ReceiptsList } from "../receipts/components/receipts-list";
 import { Home } from "../home/home";
-import { CustomerDetails } from "../customer/components/customer-details";
+import { ReceiptDetails } from "../receipts/components/receipt-details";
 import { Settings } from "../settings/settings";
-import { UserInfo } from "../user-info/user-info";
-import { ContactsList } from "../contacts/components/contacts-list/contacts-list";
-import { ContactDetails } from "../contacts/components/contact-details/contact-details";
 
 const { Header, Sider, Content } = AntLayout;
 
 export const Layout = () => {
-  const { getUser, logout } = useAuthDataContext();
+  const { user, logout } = useAuthDataContext();
   const [showUserInfo, setShowUserInfo] = useState(false);
+  const history = useHistory();
 
-  const handleLogout = () => logout();
+  const handleLogout = () => logout(handleLogoutSuccess);
+  const handleLogoutSuccess = () => {
+    history.push("/");
+  };
   const handleShowUserInfo = () => setShowUserInfo(!showUserInfo);
 
   return (
@@ -26,7 +27,7 @@ export const Layout = () => {
       <AntLayout className={styles.container}>
         <Sider theme="light" className={styles.sider} collapsible={true}>
           <div className={styles.menuIcon}>
-            <Avatar size="large" src={getUser().picture} />
+            <Avatar size="large">{user.email?.substring(0, 2).toUpperCase()}</Avatar>
           </div>
           <Menu mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item key="1">
@@ -36,20 +37,15 @@ export const Layout = () => {
             </Menu.Item>
             <Menu.Item key="2">
               <PieChartFilled />
-              <span>Customers</span>
-              <Link to="/home/customers" />
+              <span>Receipts</span>
+              <Link to="/home/receipts" />
             </Menu.Item>
             <Menu.Item key="3">
-              <DesktopOutlined />
-              <span>Contacts</span>
-              <Link to="/home/contacts" />
-            </Menu.Item>
-            <Menu.Item key="4">
               <InboxOutlined />
               <span>Settings</span>
               <Link to="/home/settings" />
             </Menu.Item>
-            <Menu.Item key="5" onClick={handleLogout}>
+            <Menu.Item key="4" onClick={handleLogout}>
               <LogoutOutlined />
               <span>Logout</span>
             </Menu.Item>
@@ -58,25 +54,23 @@ export const Layout = () => {
         <AntLayout>
           <Header className={styles.header}>
             <div className={styles.headerContent}>
-              <PageHeader title="Customer Manager" subTitle="Manage your customers and users from a single place..." />
+              <PageHeader title="Congregation Manager" />
               <div className={styles.myInformation} onClick={handleShowUserInfo}>
-                <Avatar src={getUser().picture} />
-                <span className={styles.email}>{getUser().name}</span>
+                <Avatar size="large">{user.email?.substring(0, 2).toUpperCase()}</Avatar>
+                <span className={styles.email}>{user.email}</span>
               </div>
             </div>
           </Header>
           <Content className={styles.content}>
             <Route path="/home" component={Home} exact />
-            <Route path="/home/customers" component={CustomersList} exact />
-            <Route path="/home/customers/details" component={CustomerDetails} />
-            <Route path="/home/contacts" component={ContactsList} exact />
-            <Route path="/home/contacts/details" component={ContactDetails} />
+            <Route path="/home/receipts" component={ReceiptsList} exact />
+            <Route path="/home/receipts/details" component={ReceiptDetails} />
             <Route path="/home/settings" component={Settings} />
           </Content>
         </AntLayout>
       </AntLayout>
       <Drawer width="400px" placement="right" closable={true} visible={showUserInfo} onClose={handleShowUserInfo}>
-        <UserInfo user={getUser()} />
+        Test
       </Drawer>
     </>
   );

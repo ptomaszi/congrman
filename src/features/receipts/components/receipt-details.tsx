@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Input, Button, Result } from "antd";
-import styles from "./customer-details.module.scss";
+import styles from "./receipt-details.module.scss";
 import { useHistory } from "react-router-dom";
-import { Customer } from "../models/customer";
-import { addCustomer, editCustomer } from "../api/customer";
+import { Receipt } from "../models/receipt";
+import {} from "../api/receipts";
 import { InfoCircleOutlined } from "@ant-design/icons";
 
-export const CustomerDetails = () => {
+export const ReceiptDetails = () => {
   const history = useHistory();
   const [customer, setCustomer] = useState();
   const [title, setTitle] = useState("");
@@ -33,23 +33,7 @@ export const CustomerDetails = () => {
   };
 
   const handleSubmit = (values: any) => {
-    const customerModel: Customer = { ...values };
-
-    if (!newCustomer) {
-      customerModel._id = customer._id;
-    }
-
-    const apiCall = newCustomer ? addCustomer : editCustomer;
-
-    apiCall(customerModel)
-      .then(() => {
-        setMessage("Successfully saved customer details");
-        setSuccess(true);
-      })
-      .catch(() => {
-        setMessage("An unexpected error occurred. Please try again");
-        setSuccess(false);
-      });
+    const customerModel: Receipt = { ...values };
   };
 
   return (

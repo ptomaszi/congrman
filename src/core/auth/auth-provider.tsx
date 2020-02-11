@@ -1,18 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
-import createAuth0Client from "@auth0/auth0-spa-js";
-import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useContext } from "react";
+import firebase, { User } from "firebase";
 
 export interface Auth {
   isLoading: boolean;
-  isAuthenticated: boolean;
-  user: any;
-  token: string;
-  loginWithRedirect: (options?: RedirectLoginOptions) => void;
-  getTokenSilently: () => void;
-  getIdTokenClaims: () => void;
-  logout: (options: LogoutOptions) => void;
+  isAuthenticated: () => boolean;
+  login: (username: string, password: string, onSuccess: () => void, onFail: () => void) => void;
+  logout: (onSuccess: () => void) => void;
+  user: User;
 }
 
 export interface Props {
@@ -21,77 +15,50 @@ export interface Props {
 
 export const AuthContext = React.createContext<Auth>({
   isLoading: false,
-  isAuthenticated: false,
-  user: null,
-  token: "",
-  loginWithRedirect: (options?: RedirectLoginOptions) => {},
-  getTokenSilently: () => {},
-  getIdTokenClaims: () => {},
-  logout: (options: LogoutOptions) => {}
+  isAuthenticated: () => false,
+  login: (username: string, password: string, onSuccess: () => void, onFail: () => void) => {},
+  logout: (onSuccess: () => void) => {},
+  user: {} as User
 });
 
 export const AuthProvider = (props: Props) => {
-  const [auth0Client, setAuth0Client] = useState<Auth0Client>();
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState();
-  const [token, setToken] = useState("");
-  const history = useHistory();
 
-  const config: Auth0ClientOptions = {
-    domain: process.env.REACT_APP_AUTH0_DOMAIN + "",
-    client_id: process.env.REACT_APP_AUTH0_CLIENT_ID + "",
-    redirect_uri: window.location.origin,
-    audience: process.env.REACT_APP_AUTH0_AUDIENCE + ""
-  };
-
-  useEffect(() => {
-    initializeAuth0();
-    // eslint-disable-next-line
-  }, []);
-
-  const initializeAuth0 = async () => {
-    const auth0Client: Auth0Client = await createAuth0Client(config);
-    const isAuthenticated = await auth0Client.isAuthenticated();
-    setAuth0Client(auth0Client);
-
-    if (window.location.search.includes("code=")) {
-      return handleRedirectCallback(auth0Client);
-    }
-
-    setIsAuthenticated(isAuthenticated);
-    setIsLoading(false);
-
-    const user = isAuthenticated ? await auth0Client.getUser() : null;
-    setUser(user);
-  };
-
-  const handleRedirectCallback = async (client: Auth0Client) => {
+  const handleLogin = async (username: string, password: string, onSuccess: () => void, onFail: () => void) => {
     setIsLoading(true);
-    await client.handleRedirectCallback();
-    const user = await client.getUser();
-    setUser(user);
-    setIsLoading(false);
-    setIsAuthenticated(true);
+    let response: firebase.auth.UserCredential = {} as firebase.auth.UserCredential;
 
-    const token = await client.getTokenSilently();
-    setToken(token);
+    try {
+      response = await firebase.auth().signInWithEmailAndPassword(username, password);
+      setUser(response.user);
+      onSuccess();
+      localStorage.setItem("authenticated", "true");
+    } catch (error) {
+      localStorage.removeItem("authenticated");
+      setUser(null);
+      onFail();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const handleLogout = (onSuccess: () => void) => {
+    localStorage.removeItem("authenticated");
+    setUser(null);
+  };
 
-    window.history.replaceState({}, document.title, window.location.pathname);
-    history.push("/home");
+  const handleIsAuthenticated = () => {
+    return localStorage.getItem("authenticated") === "true";
   };
 
   const configObject = {
     isLoading,
-    isAuthenticated,
-    user,
-    token,
-    loginWithRedirect: (...p: any) => auth0Client?.loginWithRedirect(...p),
-    getTokenSilently: (...p: any) => auth0Client?.getTokenSilently(...p),
-    getIdTokenClaims: (...p: any) => auth0Client?.getIdTokenClaims(...p),
-    logout: (...p: any) => auth0Client?.logout(...p)
+    isAuthenticated: () => handleIsAuthenticated(),
+    login: (username: string, password: string, onSuccess: () => void, onFail: () => void) =>
+      handleLogin(username, password, onSuccess, onFail),
+    logout: (onSuccess: () => void) => handleLogout(onSuccess),
+    user: user
   };
 
   return <AuthContext.Provider value={configObject}>{props.children}</AuthContext.Provider>;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, RouteComponentProps, withRouter } from "react-router-dom";
-import { useAuthDataContext } from "./auth-embedded-provider";
+import { useAuthDataContext } from "./auth-provider";
 import { LoginEmbedded } from "../../features/login/login-embedded";
 
 interface PrivateRouteProps extends RouteComponentProps {

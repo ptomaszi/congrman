@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, Form, Input, Result, Button } from "antd";
 import styles from "./login.module.scss";
-import { useAuthDataContext } from "../../core/auth/auth-embedded-provider";
+import { useAuthDataContext } from "../../core/auth/auth-provider";
 import { LockOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 
