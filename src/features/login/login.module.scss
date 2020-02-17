@@ -2,50 +2,112 @@
 
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: $login-container-background-colour;
+  background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
 
-  .topHeader {
-    background-color: $login-top-header-background-colour;
-    color: white;
-    margin-bottom: 20px;
-    height: 40px;
-    padding: 5px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    display: flex;
-    justify-content: flex-start;
-    align-content: center;
+  > img {
+    position: absolute;
+    left: 90px;
+    bottom: 257px;
   }
 
-  .cardContainer {
+  footer {
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #7b68ee;
+    color: white;
+    font-weight: bold;
+    height: 30px;
+  }
+
+  .loginRow {
     display: grid;
-    grid-template-columns: 2.5fr 1.5fr;
+    grid-template-columns: 2fr 1fr 2fr;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 
-    .logoContainer {
-      margin-right: 20px;
-      height: 300px;
-
-      > img {
-        height: inherit;
+    .settingIcon {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7b68ee;
+      .first {
+        font-size: 6rem;
+        color: rgba(123, 104, 238, 0.7);
+        position: relative;
+        top: 20px;
+      }
+      .second {
+        font-size: 10rem;
+        position: relative;
+        top: 10px;
+      }
+      .third {
+        font-size: 8rem;
+        color: rgba(123, 104, 238, 0.4);
+        position: relative;
+        top: 40px;
       }
     }
   }
 
-  > .card {
-    width: auto;
-    height: auto;
-    box-shadow: 0px 0px 20px $box-shadow-colour;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  > .header {
+    font-size: 5.3rem;
+    position: relative;
+    bottom: 137px;
+    font-weight: 400;
+    color: white;
+  }
+
+  > .subHeader {
+    list-style: none;
+    li {
+      display: inline;
+      margin-right: 20px;
+      font-size: 1.5rem;
+      padding: 20px;
+      position: relative;
+      bottom: 116px;
+
+      > .text {
+        margin-left: 20px;
+
+        &:hover {
+          opacity: 0.5;
+          cursor: pointer;
+          transform: scale(1.2);
+          transition: all 0.4s ease;
+        }
+      }
+
+      > .icon {
+        font-size: 2.6rem;
+        color: #7b68ee;
+      }
+    }
+  }
+
+  > .loginHeader {
+    font-size: 2.3rem;
+    position: relative;
+    font-weight: bold;
+    color: rgb(123, 104, 238);
   }
 
   .lockIconContainer {
-    background-color: $login-icon-border-colour;
+    background-color: #7b68ee;
     border-radius: 50px;
     height: 100px;
     width: 100px;
@@ -53,12 +115,11 @@
     justify-content: center;
     align-items: center;
     margin: auto;
+    position: relative;
+    top: 12px;
 
     &:hover {
-      opacity: 0.5;
       cursor: pointer;
-      transform: scale(1.2);
-      transition: all 0.4s ease;
     }
     .lockIcon {
       font-size: 70px;
@@ -69,6 +130,23 @@
   .description {
     text-align: center;
     margin-bottom: 30px;
-    max-width: 250px;
   }
+}
+
+.stepOneContainer {
+  @extend .container;
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+}
+
+.stepTwoContainer {
+  @extend .container;
+  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.stepThreeContainer {
+  @extend .container;
+  background-color: #dcd9d4;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
+    radial-gradient(at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.5) 50%);
+  background-blend-mode: soft-light, screen;
 }

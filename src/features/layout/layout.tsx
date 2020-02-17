@@ -8,6 +8,7 @@ import { ReceiptsList } from "../receipts/components/receipts-list";
 import { Home } from "../home/home";
 import { ReceiptDetails } from "../receipts/components/receipt-details";
 import { Settings } from "../settings/settings";
+import logo from "./logo.jpg";
 
 const { Header, Sider, Content } = AntLayout;
 
@@ -27,7 +28,7 @@ export const Layout = () => {
       <AntLayout className={styles.container}>
         <Sider theme="light" className={styles.sider} collapsible={true}>
           <div className={styles.menuIcon}>
-            <Avatar size="large">{user.email?.substring(0, 2).toUpperCase()}</Avatar>
+            <img src={logo} />
           </div>
           <Menu mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item key="1">
